@@ -1,23 +1,17 @@
 package org.example;
 
 
-import lombok.extern.slf4j.Slf4j;
-import org.example.utils.StringArgsValidator;
+import org.example.utils.MovesValidator;
 
-@Slf4j
-public class App
-{
-    public static void main( String[] args )
-    {
+public class App {
+    public static void main(String[] args) {
 
-        StringArgsValidator f = new StringArgsValidator();
+        MovesValidator argsValidator = MovesValidator.getInstance(args);
 
-        System.out.println(f.getKek());
-        System.out.println( "Hello World!" );
 
-        for (String a:
-             args) {
-            System.out.println(a);
+        System.err.println(argsValidator.checkMoves()); //TODO убрать
+        if (argsValidator.checkMoves()){
+            Game game = Game.getInstance(args);
         }
     }
 }
