@@ -3,12 +3,11 @@ package org.example;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.example.utils.Encoder;
+import org.example.utils.ShaUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.security.NoSuchAlgorithmException;
 
 @Slf4j
 @Getter
@@ -17,9 +16,14 @@ public class Game {
 
     private static Game instance;
     private String[] moves;
+    private final ComputerPlayer computerPlayer;
+    private String computerMove;
+    private final String shaKey;
 
-    public Game(String[] moves) {
+    private Game(String[] moves) {
         this.moves = moves;
+        shaKey = ShaUtil.generateAndGetKey();
+        computerPlayer = new ComputerPlayer();
     }
 
     public static Game getInstance(String[] moves) {
@@ -30,23 +34,11 @@ public class Game {
     }
 
     public void startTheGame() {
+        System.out.println("HMAC: " + shaKey.toUpperCase());
         printAvailableMoves();
         System.out.println("Enter your move: ");
-
-
-//        Random random = new SecureRandom();
-//        byte[] key = new byte[16];
-//        //random.nextBytes(key);
-//        System.out.println(random);
-        try {
-            Encoder.generate();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        //TODO app's move is here, before player move
         getPlayerMove();
-
-
+         computerPlayer.getMove(moves);
     }
 
 
@@ -70,14 +62,13 @@ public class Game {
             indexOfPlayerMove = Integer.parseInt(playerInput) - 1;
         } catch (IOException ioException) {
             log.error("IO exception", ioException);
-            System.err.println("Input failed...");
         } catch (ArrayIndexOutOfBoundsException | NumberFormatException indexException) {
             log.error("Incorrect input", indexException);
             System.err.println("Not available index of the move," +
                     " please enter correct index from the list of available moves." +
                     " Available only numbers in moves count length: \"1-" + moves.length + "\"");
         }
-        log.info("Index of player input in args[] array: " + indexOfPlayerMove);
+  //      log.info("Index of player input in args[] array: " + indexOfPlayerMove);
         return indexOfPlayerMove;
     }
 }
