@@ -8,6 +8,8 @@ import org.example.utils.ShaUtil;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 @Slf4j
 @Getter
@@ -22,7 +24,7 @@ public class Game {
 
     private Game(String[] moves) {
         this.moves = moves;
-        shaKey = ShaUtil.generateAndGetKey();
+        shaKey = ShaUtil.generateAndGetKey().toUpperCase();
         computerPlayer = new ComputerPlayer();
     }
 
@@ -34,11 +36,18 @@ public class Game {
     }
 
     public void startTheGame() {
-        System.out.println("HMAC: " + shaKey.toUpperCase());
+        System.out.println("HMAC: " + shaKey);
         printAvailableMoves();
         System.out.println("Enter your move: ");
-        getPlayerMove();
-         computerPlayer.getMove(moves);
+        int playerMoveIndex = getPlayerMoveIndex();
+        int computerMoveIndex = computerPlayer.getMoveIndex(moves);
+        System.out.println("Computer move: " + moves[computerMoveIndex]);
+        //TODO win check
+        try {
+            System.out.println(ShaUtil.getEncodedMove(shaKey, moves[computerMoveIndex]).toUpperCase());
+        } catch (NoSuchAlgorithmException | InvalidKeyException exception) {
+            exception.printStackTrace();
+        }
     }
 
 
@@ -50,7 +59,7 @@ public class Game {
         System.out.println("0  - exit");
     }
 
-    public Integer getPlayerMove() {
+    public Integer getPlayerMoveIndex() {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Integer indexOfPlayerMove = null;
         try {
@@ -68,7 +77,7 @@ public class Game {
                     " please enter correct index from the list of available moves." +
                     " Available only numbers in moves count length: \"1-" + moves.length + "\"");
         }
-  //      log.info("Index of player input in args[] array: " + indexOfPlayerMove);
+        //      log.info("Index of player input in args[] array: " + indexOfPlayerMove);
         return indexOfPlayerMove;
     }
 }

@@ -27,8 +27,8 @@ public class ShaUtil {
         return Hex.encodeHexString(values);
     }
 
-    public static String getEncodedMove(String move) throws NoSuchAlgorithmException, InvalidKeyException {
-        String key = generateAndGetKey();
+    public static String getEncodedMove(String key, String move) throws NoSuchAlgorithmException, InvalidKeyException {
+        //String key = generateAndGetKey();
         Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
         sha256_HMAC.init(new SecretKeySpec(key.getBytes(), "HmacSHA256"));
         byte[] result = sha256_HMAC.doFinal(move.getBytes());
