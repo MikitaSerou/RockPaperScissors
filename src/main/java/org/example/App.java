@@ -1,6 +1,5 @@
 package org.example;
 
-
 import org.example.utils.MovesValidator;
 
 public class App {
@@ -8,10 +7,9 @@ public class App {
 
         MovesValidator argsValidator = MovesValidator.getInstance(args);
 
-
-        System.err.println(argsValidator.checkMoves()); //TODO убрать
-        if (argsValidator.checkMoves()){
+        if (argsValidator.checkMoves()) {
             Game game = Game.getInstance(args);
+            game.startTheGame();
         }
     }
 }
