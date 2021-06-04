@@ -6,19 +6,11 @@ import org.example.utils.MovesValidator;
 public class App {
 
     public static void main(String[] args) {
-        MovesValidator argsValidator = MovesValidator.getInstance(args);
-        if (argsValidator.checkMoves()) {
+        if (MovesValidator.checkMoves(args)) {
             Game game = Game.getInstance(args);
-            game.startTheGame();
+            game.runTheGame();
+        }else {
+            System.err.println("Exit...");
         }
     }
 }
-
-//     ShaUtil.ex2();
-
-
-//        try {
-//            ShaUtils.ex2();
-//        } catch (NoSuchAlgorithmException e) {
-//            e.printStackTrace();
-//        }

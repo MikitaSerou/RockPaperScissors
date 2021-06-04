@@ -1,26 +1,21 @@
 package org.example;
 
 import org.example.utils.ShaUtil;
-import org.slf4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
+import java.util.Random;
 
 public class Game {
 
-    private static final Logger log = org.slf4j.LoggerFactory.getLogger(Game.class);
     private static Game instance;
-    private String[] moves;
-    private final ComputerPlayer computerPlayer;
+    private final String[] moves;
     private final String shaKey;
 
     private Game(String[] moves) {
         this.moves = moves;
         shaKey = ShaUtil.generateAndGetKey().toUpperCase();
-        computerPlayer = new ComputerPlayer();
     }
 
     public static Game getInstance(String[] moves) {
@@ -30,17 +25,13 @@ public class Game {
         return instance;
     }
 
-    public void startTheGame() {
-        int computerMoveIndex = computerPlayer.getMoveIndex(moves);
-        try {
-            System.out.println("HMAC: " + ShaUtil.getEncodedMove(shaKey, moves[computerMoveIndex]).toUpperCase());
-        } catch (NoSuchAlgorithmException | InvalidKeyException exception) {
-            exception.printStackTrace();
-        }
+    public void runTheGame() {
+        int computerMoveIndex = new Random().nextInt(moves.length);
+        System.out.println("HMAC: " + ShaUtil.getEncodedMove(shaKey, moves[computerMoveIndex]).toUpperCase());
         printAvailableMoves();
         System.out.println("Enter your move: ");
         Integer playerMoveIndex = getPlayerMoveIndex();
-        if (playerMoveIndex == null){
+        if (playerMoveIndex == null) {
             System.out.println("Exit... ");
             return;
         }
@@ -49,7 +40,7 @@ public class Game {
         System.out.println("HMAC key: " + shaKey);
     }
 
-    public void printAvailableMoves() {
+    private void printAvailableMoves() {
         System.out.println("Available moves: ");
         for (int i = 1; i <= moves.length; i++) {
             System.out.println(i + " - " + moves[i - 1]);
@@ -57,64 +48,39 @@ public class Game {
         System.out.println("0 - exit");
     }
 
-    public Integer getPlayerMoveIndex() {
+    private Integer getPlayerMoveIndex() {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        Integer indexOfPlayerMove = null;
+        int indexOfPlayerMove;
         try {
             String playerInput = reader.readLine();
             if (playerInput.equals("0")) {
                 return null;
             }
-            System.out.println("Your move: " + moves[Integer.parseInt(playerInput) - 1]);
             indexOfPlayerMove = Integer.parseInt(playerInput) - 1;
+            System.out.println("Your move: " + moves[indexOfPlayerMove]);
         } catch (IOException ioException) {
-            log.error("IO exception", ioException);
+            ioException.printStackTrace();
             return getPlayerMoveIndex();
         } catch (ArrayIndexOutOfBoundsException | NumberFormatException indexException) {
-            log.error("Incorrect input", indexException);
-            System.err.println("Not available index of the move," +
-                    " please enter correct index from the list of available moves." +
-                    " Available only numbers in moves count length: \"1-" + moves.length + "\"");
+            System.err.println("Not available index of the move, please enter correct index from the list of " +
+                    "available moves. Available only numbers in moves count length: \"1-" + moves.length + "\"" +
+                    ", or \"0\" for exit from program.");
             return getPlayerMoveIndex();
         }
-        //      log.info("Index of player input in args[] array: " + indexOfPlayerMove);
         return indexOfPlayerMove;
     }
 
-    public void checkWinner(int playerMoveIndex, int computerMoveIndex){
-        //TODO переименовать:
-        int arrLengthHalf = (moves.length-1)/2;
-        log.info(String.valueOf(arrLengthHalf));
-        log.info("p: " +String.valueOf(playerMoveIndex));
-        log.info("c: " +String.valueOf(computerMoveIndex));
-        log.info(String.valueOf(playerMoveIndex - computerMoveIndex));
-        if (playerMoveIndex == computerMoveIndex){
+    private void checkWinner(int playerMoveIndex, int computerMoveIndex) {
+        int countOfPossibleWinners = (moves.length - 1) / 2;
+        if (playerMoveIndex == computerMoveIndex) {
             System.out.println("Spare");
             return;
         }
-        if(playerMoveIndex - computerMoveIndex < -arrLengthHalf || ((playerMoveIndex - computerMoveIndex) > 0 && (playerMoveIndex - computerMoveIndex) <= arrLengthHalf)){
+        if (playerMoveIndex - computerMoveIndex < -countOfPossibleWinners ||
+                playerMoveIndex - computerMoveIndex > 0 && playerMoveIndex - computerMoveIndex <= countOfPossibleWinners) {
             System.out.println("Player wins!");
-        }else {
-            System.out.println("Comp wins");
+        } else {
+            System.out.println("Computer wins");
         }
-
     }
-
-    public String[] getMoves() {
-        return this.moves;
-    }
-
-    public ComputerPlayer getComputerPlayer() {
-        return this.computerPlayer;
-    }
-
-
-    public String getShaKey() {
-        return this.shaKey;
-    }
-
-    public void setMoves(String[] moves) {
-        this.moves = moves;
-    }
-
 }
