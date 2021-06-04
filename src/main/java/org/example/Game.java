@@ -1,10 +1,9 @@
 package org.example;
 
+import org.example.utils.UIUtil;
 import org.example.utils.ShaUtil;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+
 import java.util.Random;
 
 public class Game {
@@ -12,10 +11,14 @@ public class Game {
     private static Game instance;
     private final String[] moves;
     private final String shaKey;
+    private final UIUtil UIUtil;
+    private Integer userMoveIndex;
+    private int computerMoveIndex;
 
     private Game(String[] moves) {
         this.moves = moves;
         shaKey = ShaUtil.generateAndGetKey().toUpperCase();
+        UIUtil = new UIUtil(moves);
     }
 
     public static Game getInstance(String[] moves) {
@@ -26,48 +29,31 @@ public class Game {
     }
 
     public void runTheGame() {
-        int computerMoveIndex = new Random().nextInt(moves.length);
+        doComputerMove();
+        doUserMove();
+        if (userMoveIndex == null) {
+            System.err.println("ge");
+            exit();
+        } else {
+            System.out.println("Your move: " + moves[userMoveIndex]);
+            showResultInfo();
+        }
+    }
+
+    public void doUserMove(){
+        userMoveIndex = UIUtil.getUserChoiceIndex();
+        System.err.println(userMoveIndex);
+    }
+
+    private void doComputerMove() {
+        computerMoveIndex = new Random().nextInt(moves.length);
         System.out.println("HMAC: " + ShaUtil.getEncodedMove(shaKey, moves[computerMoveIndex]).toUpperCase());
-        printAvailableMoves();
-        System.out.println("Enter your move: ");
-        Integer playerMoveIndex = getPlayerMoveIndex();
-        if (playerMoveIndex == null) {
-            System.out.println("Exit... ");
-            return;
-        }
+    }
+
+    private void showResultInfo() {
         System.out.println("Computer move: " + moves[computerMoveIndex]);
-        checkWinner(playerMoveIndex, computerMoveIndex);
+        checkWinner(userMoveIndex, computerMoveIndex);
         System.out.println("HMAC key: " + shaKey);
-    }
-
-    private void printAvailableMoves() {
-        System.out.println("Available moves: ");
-        for (int i = 1; i <= moves.length; i++) {
-            System.out.println(i + " - " + moves[i - 1]);
-        }
-        System.out.println("0 - exit");
-    }
-
-    private Integer getPlayerMoveIndex() {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        int indexOfPlayerMove;
-        try {
-            String playerInput = reader.readLine();
-            if (playerInput.equals("0")) {
-                return null;
-            }
-            indexOfPlayerMove = Integer.parseInt(playerInput) - 1;
-            System.out.println("Your move: " + moves[indexOfPlayerMove]);
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-            return getPlayerMoveIndex();
-        } catch (ArrayIndexOutOfBoundsException | NumberFormatException indexException) {
-            System.err.println("Not available index of the move, please enter correct index from the list of " +
-                    "available moves. Available only numbers in moves count length: \"1-" + moves.length + "\"" +
-                    ", or \"0\" for exit from program.");
-            return getPlayerMoveIndex();
-        }
-        return indexOfPlayerMove;
     }
 
     private void checkWinner(int playerMoveIndex, int computerMoveIndex) {
@@ -76,11 +62,16 @@ public class Game {
             System.out.println("Spare");
             return;
         }
-        if (playerMoveIndex - computerMoveIndex < -countOfPossibleWinners ||
-                playerMoveIndex - computerMoveIndex > 0 && playerMoveIndex - computerMoveIndex <= countOfPossibleWinners) {
+        if (playerMoveIndex - computerMoveIndex > countOfPossibleWinners
+                || playerMoveIndex - computerMoveIndex < 0
+                && playerMoveIndex - computerMoveIndex >= -countOfPossibleWinners) {
             System.out.println("Player wins!");
         } else {
             System.out.println("Computer wins");
         }
+    }
+
+    private void exit() {
+        System.out.println("Exit...");
     }
 }
