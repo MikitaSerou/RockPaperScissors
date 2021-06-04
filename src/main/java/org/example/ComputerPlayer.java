@@ -1,11 +1,12 @@
 package org.example;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 
 import java.util.Random;
 
-@Slf4j
 public class ComputerPlayer {
+
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(ComputerPlayer.class);
 
     public Integer getMoveIndex(String[] moves) {
         Integer randomMoveIndex = new Random().nextInt(moves.length);

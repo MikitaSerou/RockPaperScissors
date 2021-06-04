@@ -1,15 +1,15 @@
 package org.example.utils;
 
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-@Slf4j
 public final class MovesValidator {
 
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(MovesValidator.class);
     private static MovesValidator instance;
     private final String[] moves;
 

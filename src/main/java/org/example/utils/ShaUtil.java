@@ -1,7 +1,7 @@
 package org.example.utils;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Hex;
+import org.slf4j.Logger;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -10,8 +10,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Random;
 
-@Slf4j
 public class ShaUtil {
+
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(ShaUtil.class);
 
     public static String generateAndGetKey(){ //TODO норм вроде
         Random random = null;
