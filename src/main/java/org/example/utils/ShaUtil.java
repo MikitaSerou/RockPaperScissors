@@ -26,11 +26,10 @@ public class ShaUtil {
         return Hex.encodeHexString(values);
     }
 
-    public static String getEncodedMove(String key, String move){
+    public static String getEncodedMove(String key, String move) {
         Mac sha256_HMAC = null;
         try {
             sha256_HMAC = Mac.getInstance("HmacSHA256");
-
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }

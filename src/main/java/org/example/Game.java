@@ -1,9 +1,10 @@
 package org.example;
 
-import org.example.utils.UIUtil;
 import org.example.utils.ShaUtil;
+import org.example.utils.UserMenu;
 
-
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Random;
 
 public class Game {
@@ -11,14 +12,14 @@ public class Game {
     private static Game instance;
     private final String[] moves;
     private final String shaKey;
-    private final UIUtil UIUtil;
+    private final UserMenu userMenu;
     private Integer userMoveIndex;
     private int computerMoveIndex;
 
     private Game(String[] moves) {
         this.moves = moves;
-        shaKey = ShaUtil.generateAndGetKey().toUpperCase();
-        UIUtil = new UIUtil(moves);
+        shaKey = ShaUtil.generateAndGetKey()/*.toUpperCase()*/;
+        userMenu = new UserMenu(moves);
     }
 
     public static Game getInstance(String[] moves) {
@@ -30,19 +31,14 @@ public class Game {
 
     public void runTheGame() {
         doComputerMove();
-        doUserMove();
+        userMenu.printMenu();
+        userMoveIndex = userMenu.getUserChoiceIndex(new BufferedReader(new InputStreamReader(System.in)));
         if (userMoveIndex == null) {
-            System.err.println("ge");
             exit();
         } else {
             System.out.println("Your move: " + moves[userMoveIndex]);
             showResultInfo();
         }
-    }
-
-    public void doUserMove(){
-        userMoveIndex = UIUtil.getUserChoiceIndex();
-        System.err.println(userMoveIndex);
     }
 
     private void doComputerMove() {
@@ -71,7 +67,7 @@ public class Game {
         }
     }
 
-    private void exit() {
+    public void exit() {
         System.out.println("Exit...");
     }
 }
