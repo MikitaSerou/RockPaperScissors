@@ -29,34 +29,7 @@ public class AppTest {
 
     String[] oddArgs = new String[]{"paper", "scissors", "lizard", "Spock"};
     String[] notUniqueArgs = new String[]{"paper", "scissors", "lizard", "Spock", "paper"};
-
-
-//    @Test
-//    public void emptyKeyTest() {
-//        Game dictMock = mock(Game.class);
-//        doThrow(IllegalArgumentException.class).when(dictMock).runTheGame();
-//        assertThrows(IllegalArgumentException.class,() -> {App.main(oddArgs);
-//        });
-//       // dictMock.runTheGame();
-//        }
-
-//    @Test
-//    public void validArgsInitializationTest() {
-//        App.main(new String[]{"Rock", "Paper", "Scissors"});
-//        BufferedReader dictMock = mock(BufferedReader.class);
-//
-//        try {
-//            when(dictMock.readLine()).thenReturn("1");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        // dictMock.runTheGame();
-//        assertEquals("",
-//                outputStreamCaptor.toString().trim());
-//        assertEquals("kek",
-//                outputStreamCaptor.toString().trim());
-//    }
+    String[] notUniqueOddArgs = new String[]{"paper", "scissors", "lizard", "paper" };
 
     @Test
     public void notUniqueArgsInitializationTest() {
@@ -71,6 +44,14 @@ public class AppTest {
         App.main(oddArgs);
         assertEquals("Odd number of inputted moves, please enter not Odd quantity of unique moves." +
                         " For example: 3,5,7,9...\nExit...",
+                outputStreamCaptor.toString().trim());
+    }
+    @Test
+    public void notUniqueOddArgsInitializationTest() {
+        App.main(notUniqueOddArgs);
+        assertEquals("Odd number of inputted moves, please enter not Odd quantity of unique moves. For example: 3,5,7,9...\n" +
+                        "Entered moves is not unique, please input new program arguments.\n" +
+                        "Exit...",
                 outputStreamCaptor.toString().trim());
     }
 }

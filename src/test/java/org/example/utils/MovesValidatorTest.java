@@ -1,6 +1,5 @@
 package org.example.utils;
 
-import org.example.utils.MovesValidator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
