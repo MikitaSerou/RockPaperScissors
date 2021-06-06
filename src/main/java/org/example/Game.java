@@ -11,6 +11,7 @@ public class Game {
     private final UserTurnChecker userTurnChecker;
     private Integer userMoveIndex;
     private int computerMoveIndex;
+    private boolean userCompleteTurn;
 
     public Game(String[] moves, String shaKey, UserTurnChecker userTurnChecker) {
         this.moves = moves;
@@ -20,25 +21,26 @@ public class Game {
 
     public void runTheGame() {
         doComputerMove();
-        doPlayerMove();
-        if (userMoveIndex == null){
-            printExitMessage();
-            return;
+        while (!userCompleteTurn) {
+            doPlayerMove();
         }
-        showResultInfo();
+        if (userMoveIndex != null) {
+            showResultInfo();
+        }
+        printExitMessage();
     }
 
     public void doPlayerMove() {
         printMenu();
         String userInput = userTurnChecker.readUserInput();
-        if (userInput.equals("0")){
-          return;
+        if (userInput.equals("0")) {
+            userCompleteTurn = true;
+            return;
         }
         userMoveIndex = userTurnChecker.getUserChoiceIndex(userInput);
-        if (userTurnChecker.isAvailableIndex(userMoveIndex)){
+        if (userTurnChecker.isAvailableIndex(userMoveIndex)) {
             System.out.println("Your move: " + moves[userMoveIndex]);
-        }else{
-            doPlayerMove();
+            userCompleteTurn = true;
         }
     }
 
@@ -52,7 +54,7 @@ public class Game {
         for (int i = 1; i <= moves.length; i++) {
             System.out.println(i + " - " + moves[i - 1]);
         }
-        System.out.println("\"0\" - exit");
+        System.out.println("0 - exit");
         System.out.println("Enter your move: ");
     }
 
@@ -77,7 +79,35 @@ public class Game {
         }
     }
 
+    public void setUserMoveIndex(Integer userMoveIndex) {
+        this.userMoveIndex = userMoveIndex;
+    }
+
     public void printExitMessage() {
         System.out.println("Exit...");
+    }
+
+    public String[] getMoves() {
+        return moves;
+    }
+
+    public String getShaKey() {
+        return shaKey;
+    }
+
+    public UserTurnChecker getUserTurnChecker() {
+        return userTurnChecker;
+    }
+
+    public Integer getUserMoveIndex() {
+        return userMoveIndex;
+    }
+
+    public int getComputerMoveIndex() {
+        return computerMoveIndex;
+    }
+
+    public boolean isUserCompleteTurn() {
+        return userCompleteTurn;
     }
 }

@@ -40,9 +40,7 @@ public class ShaUtilTest {
 
     @Test
     public void emptyKeyTest() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            ShaUtil.getEncodedMove("", "hello");
-        });
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> ShaUtil.getEncodedMove("", "hello"));
         String expectedMessage = "Empty key";
         String actualMessage = exception.getMessage();
         assertTrue(actualMessage.contains(expectedMessage));
