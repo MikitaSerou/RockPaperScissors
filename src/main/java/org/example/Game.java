@@ -30,7 +30,7 @@ public class Game {
         printExitMessage();
     }
 
-    public void doPlayerMove() {
+    private void doPlayerMove() {
         printMenu();
         String userInput = userTurnChecker.readUserInput();
         if (userInput.equals("0")) {

@@ -9,45 +9,43 @@ import java.io.PrintStream;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class GameTest {
 
     private final String[] moves = {"rock", "paper", "scissors", "lizard", "Spock"};
     private final String shaKey = "0f156beae6ac2d949c0ee52058c5a8b9";
-    private final UserTurnChecker userTurnChecker = new UserTurnChecker(moves);
-    private final Game game = new Game(moves, shaKey, userTurnChecker);
-
-    private final PrintStream standardOut = System.out;
-    private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+    private final PrintStream originalOut = System.out;
+    private final PrintStream originalErr = System.err;
 
     @BeforeEach
-    public void setUp() {
-        System.setOut(new PrintStream(outputStreamCaptor));
+    public void setUpStreams() {
+        System.setOut(new PrintStream(outContent));
+        System.setErr(new PrintStream(errContent));
     }
 
     @AfterEach
-    public void tearDown() {
-        System.setOut(standardOut);
+    public void restoreStreams() {
+        System.setOut(originalOut);
+        System.setErr(originalErr);
     }
 
 
     @Test
-    void runTheGame() {
-    }
-
-    @Test
-    void doPlayerExitChoice() {
+    void rUnTheGameWhenPlayerExitChoice() {
         UserTurnChecker userTurnCheckerMock = mock(UserTurnChecker.class);
         Game gameWithMock = new Game(moves, shaKey, userTurnCheckerMock);
         when(userTurnCheckerMock.readUserInput()).thenReturn("0");
-        gameWithMock.doPlayerMove();
+        gameWithMock.runTheGame();
         assertTrue(gameWithMock.isUserCompleteTurn());
         assertNull(gameWithMock.getUserMoveIndex());
     }
 
     @Test
-    void doPlayer1Move() {
+    void rUnTheGameWhenPlayerDo1Move() {
         UserTurnChecker userTurnCheckerMock = mock(UserTurnChecker.class);
         String userMockInput = "1";
         Game gameWithMock = new Game(moves, shaKey, userTurnCheckerMock);
@@ -56,13 +54,13 @@ class GameTest {
         Integer index = userTurnCheckerMock.getUserChoiceIndex(userMockInput);
         when(userTurnCheckerMock.isAvailableIndex(index)).thenReturn(true);
 
-        gameWithMock.doPlayerMove();
+        gameWithMock.runTheGame();
         assertEquals(0,gameWithMock.getUserMoveIndex());
         assertTrue(gameWithMock.isUserCompleteTurn());
     }
 
     @Test
-    void doPlayerMaxMove() {
+    void rUnTheGameWhenPlayerDoMaxMove() {
         UserTurnChecker userTurnCheckerMock = mock(UserTurnChecker.class);
         String userMockInput = String.valueOf(moves.length);
         Game gameWithMock = new Game(moves, shaKey, userTurnCheckerMock);
@@ -71,13 +69,13 @@ class GameTest {
         Integer index = userTurnCheckerMock.getUserChoiceIndex(userMockInput);
         when(userTurnCheckerMock.isAvailableIndex(index)).thenReturn(true);
 
-        gameWithMock.doPlayerMove();
+        gameWithMock.runTheGame();
         assertEquals(moves.length-1,gameWithMock.getUserMoveIndex());
         assertTrue(gameWithMock.isUserCompleteTurn());
     }
 
     @Test
-    void doPlayerRandomMove() {
+    void rUnTheGameWhenPlayerDoRandomMove() {
         UserTurnChecker userTurnCheckerMock = mock(UserTurnChecker.class);
         Integer randomIndex = new Random().nextInt(moves.length);
         String userMockInput = String.valueOf(randomIndex+1);
@@ -86,30 +84,9 @@ class GameTest {
         when(userTurnCheckerMock.getUserChoiceIndex(userMockInput)).thenReturn(randomIndex);
         when(userTurnCheckerMock.isAvailableIndex(randomIndex)).thenReturn(true);
 
-        gameWithMock.doPlayerMove();
+        gameWithMock.runTheGame();
         assertEquals(randomIndex,gameWithMock.getUserMoveIndex());
         assertTrue(gameWithMock.isUserCompleteTurn());
     }
 
-    @Test
-    void printMenuTest() {
-        game.printMenu();
-        assertEquals("""
-                Available moves:\s
-                1 - rock
-                2 - paper
-                3 - scissors
-                4 - lizard
-                5 - Spock
-                0 - exit
-                Enter your move:""", outputStreamCaptor.toString().trim());
-    }
-
-    @Test
-    void getMoves() {
-    }
-
-    @Test
-    void printExitMessage() {
-    }
 }

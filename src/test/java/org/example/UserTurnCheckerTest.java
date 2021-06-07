@@ -54,15 +54,6 @@ class UserTurnCheckerTest {
     }
 
     @Test
-    void inputExceptionTest() throws IOException {
-        UserTurnChecker checker = new UserTurnChecker(moves, readerMock);
-        when(readerMock.readLine()).thenThrow(IOException.class);
-        assertEquals("0", checker.readUserInput());
-        assertEquals("Enter the number corresponding to the desired move.\n" +
-                "Input/Output exception", outputStreamCaptor.toString().trim());
-    }
-
-    @Test
     void getNullIndexWhenUserInputIsGibberish() {
         UserTurnChecker checker = new UserTurnChecker(moves);
         assertNull(checker.getUserChoiceIndex("sgd"));
@@ -75,7 +66,7 @@ class UserTurnCheckerTest {
     }
 
     @Test
-    void get0IndexWhenUserInputIsArrayLenght() {
+    void get0IndexWhenUserInputIsArrayLength() {
         UserTurnChecker checker = new UserTurnChecker(moves);
         assertEquals(moves.length-1, checker.getUserChoiceIndex(String.valueOf(moves.length)));
     }
