@@ -31,9 +31,9 @@ public class UserTurnChecker {
         return inputString;
     }
 
-    public Integer getUserChoiceIndex(String s) {
+    public Integer getUserChoiceIndex(String input) {
         try {
-            return Integer.parseInt(s) - 1;
+            return Integer.parseInt(input) - 1;
         } catch (NumberFormatException e) {
             printInvalidInputMessage();
         }
@@ -51,11 +51,11 @@ public class UserTurnChecker {
     }
 
     private void printInvalidInputMessage() {
-        System.out.println("Enter the number corresponding to the desired move.");
+        System.out.println("---!!!---Enter the number corresponding to the desired move.---!!!---");
     }
 
     private void printOutOfBoundsInputMessage() {
-        System.out.println("Available moves (1-" + moves.length + ")." +
-                " Please enter only numbers from below list, or \"0\" for exit from program.");
+        System.out.println("---!!!---Available moves (1-" + moves.length + ")." +
+                " Please enter only numbers from below list, or \"0\" for exit from program.---!!!---");
     }
 }

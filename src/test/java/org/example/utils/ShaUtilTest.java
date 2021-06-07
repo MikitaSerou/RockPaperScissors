@@ -1,5 +1,7 @@
 package org.example.utils;
 
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -7,9 +9,10 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ShaUtilTest {
 
     @Test
-    public void KeyByteSizeTest() {
-        int keySize = ShaUtil.generateAndGetKey().getBytes().length;
-        assertEquals(32, keySize);
+    public void KeyByteSizeTest() throws DecoderException {
+        String key = ShaUtil.generateAndGetKey();
+        byte[] b = Hex.decodeHex(key);
+        assertEquals(16, b.length);
     }
 
     @Test

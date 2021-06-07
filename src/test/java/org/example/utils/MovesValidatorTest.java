@@ -33,22 +33,22 @@ public class MovesValidatorTest {
     @Test
     public void oddMovesCountTest() {
         assertFalse(MovesValidator.checkMovesCount(new String[]{"rock", "paper", "scissors", "lizard"}));
-        assertEquals("Odd number of inputted moves, please enter not Odd quantity of unique moves." +
-                " For example: 3,5,7,9...", outputStreamCaptor.toString().trim());
+        assertEquals("---!!!---Odd number of inputted moves, please enter not Odd quantity of unique moves." +
+                " For example: 3,5,7,9...---!!!---", outputStreamCaptor.toString().trim());
     }
 
     @Test
     public void lessThen3MovesCountTest() {
         assertFalse(MovesValidator.checkMovesCount(new String[]{"rock", "paper"}));
-        assertEquals("Not enough moves, please enter nol less than 3 unique program arguments." +
-                " For example: \"dagger bow sword\" or more.", outputStreamCaptor.toString().trim());
+        assertEquals("---!!!---Not enough moves, please enter nol less than 3 unique program arguments." +
+                " For example: \"dagger bow sword\" or more---!!!---", outputStreamCaptor.toString().trim());
     }
 
     @Test
     public void emptyMovesArrayTest() {
         assertFalse(MovesValidator.checkMovesCount(new String[]{}));
-        assertEquals("Not enough moves, please enter nol less than 3 unique program arguments." +
-                " For example: \"dagger bow sword\" or more.", outputStreamCaptor.toString().trim());
+        assertEquals("---!!!---Not enough moves, please enter nol less than 3 unique program arguments. " +
+                "For example: \"dagger bow sword\" or more---!!!---", outputStreamCaptor.toString().trim());
     }
 
     @Test
@@ -59,7 +59,7 @@ public class MovesValidatorTest {
     @Test
     public void notUniqueMovesTest() {
         assertFalse(MovesValidator.checkMovesUnique(new String[]{"A", "B", "C", "B", "D"}));
-        assertEquals("Entered moves is not unique, please input new program arguments.",
+        assertEquals("---!!!---Entered moves is not unique, please input new program arguments.---!!!---",
                 outputStreamCaptor.toString().trim());
     }
 }

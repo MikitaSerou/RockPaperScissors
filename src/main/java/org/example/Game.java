@@ -27,20 +27,16 @@ public class Game {
         if (userMoveIndex != null) {
             showResultInfo();
         }
-        printExitMessage();
     }
 
     private void doPlayerMove() {
         printMenu();
         String userInput = userTurnChecker.readUserInput();
+        Integer indexForCheck = userTurnChecker.getUserChoiceIndex(userInput);
         if (userInput.equals("0")) {
-            userCompleteTurn = true;
-            return;
-        }
-        userMoveIndex = userTurnChecker.getUserChoiceIndex(userInput);
-        if (userTurnChecker.isAvailableIndex(userMoveIndex)) {
-            System.out.println("Your move: " + moves[userMoveIndex]);
-            userCompleteTurn = true;
+            endTheGame();
+        } else if (userTurnChecker.isAvailableIndex(indexForCheck)) {
+            setUserMoveIndex(indexForCheck);
         }
     }
 
@@ -81,30 +77,17 @@ public class Game {
 
     public void setUserMoveIndex(Integer userMoveIndex) {
         this.userMoveIndex = userMoveIndex;
+        System.out.println("Your move: " + moves[userMoveIndex]);
+        userCompleteTurn = true;
     }
 
-    public void printExitMessage() {
+    public void endTheGame() {
         System.out.println("Exit...");
-    }
-
-    public String[] getMoves() {
-        return moves;
-    }
-
-    public String getShaKey() {
-        return shaKey;
-    }
-
-    public UserTurnChecker getUserTurnChecker() {
-        return userTurnChecker;
+        userCompleteTurn = true;
     }
 
     public Integer getUserMoveIndex() {
         return userMoveIndex;
-    }
-
-    public int getComputerMoveIndex() {
-        return computerMoveIndex;
     }
 
     public boolean isUserCompleteTurn() {

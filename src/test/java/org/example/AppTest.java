@@ -33,7 +33,7 @@ public class AppTest {
     @Test
     public void notUniqueArgsInitializationTest() {
         App.main(notUniqueArgs);
-        assertEquals("Entered moves is not unique, please input new program arguments.\n" +
+        assertEquals("---!!!---Entered moves is not unique, please input new program arguments.---!!!---\n" +
                         "Exit...",
                 outputStreamCaptor.toString().trim());
     }
@@ -41,16 +41,17 @@ public class AppTest {
     @Test
     public void oddArgsInitializationTest() {
         App.main(oddArgs);
-        assertEquals("Odd number of inputted moves, please enter not Odd quantity of unique moves." +
-                        " For example: 3,5,7,9...\nExit...",
+        assertEquals("---!!!---Odd number of inputted moves, please enter not Odd quantity of unique moves." +
+                        " For example: 3,5,7,9...---!!!---\n" +
+                        "Exit...",
                 outputStreamCaptor.toString().trim());
     }
     @Test
     public void notUniqueOddArgsInitializationTest() {
         App.main(notUniqueOddArgs);
         assertEquals("""
-                        Odd number of inputted moves, please enter not Odd quantity of unique moves. For example: 3,5,7,9...
-                        Entered moves is not unique, please input new program arguments.
+                        ---!!!---Odd number of inputted moves, please enter not Odd quantity of unique moves. For example: 3,5,7,9...---!!!---
+                        ---!!!---Entered moves is not unique, please input new program arguments.---!!!---
                         Exit...""",
                 outputStreamCaptor.toString().trim());
     }
