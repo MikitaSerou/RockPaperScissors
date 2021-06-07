@@ -66,10 +66,10 @@ public class Game {
             System.out.println("Spare");
             return;
         }
-        if (playerMoveIndex - computerMoveIndex > countOfPossibleWinners
-                || playerMoveIndex - computerMoveIndex < 0
-                && playerMoveIndex - computerMoveIndex >= -countOfPossibleWinners) {
-            System.out.println("Player wins!");
+        int i = playerMoveIndex - computerMoveIndex;
+        if ( i < - countOfPossibleWinners
+        || i > 0 & i<= countOfPossibleWinners) {
+            System.out.println("You win!");
         } else {
             System.out.println("Computer wins");
         }
