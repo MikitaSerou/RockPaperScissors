@@ -1,48 +1,43 @@
 package org.example;
 
-import org.example.utils.UIUtil;
 import org.example.utils.ShaUtil;
-
 
 import java.util.Random;
 
 public class Game {
 
-    private static Game instance;
     private final String[] moves;
     private final String shaKey;
-    private final UIUtil UIUtil;
+    private final UserTurnChecker userTurnChecker;
     private Integer userMoveIndex;
     private int computerMoveIndex;
+    private boolean userCompleteTurn;
 
-    private Game(String[] moves) {
+    public Game(String[] moves, String shaKey, UserTurnChecker userTurnChecker) {
         this.moves = moves;
-        shaKey = ShaUtil.generateAndGetKey().toUpperCase();
-        UIUtil = new UIUtil(moves);
-    }
-
-    public static Game getInstance(String[] moves) {
-        if (instance == null) {
-            instance = new Game(moves);
-        }
-        return instance;
+        this.shaKey = shaKey;
+        this.userTurnChecker = userTurnChecker;
     }
 
     public void runTheGame() {
         doComputerMove();
-        doUserMove();
-        if (userMoveIndex == null) {
-            System.err.println("ge");
-            exit();
-        } else {
-            System.out.println("Your move: " + moves[userMoveIndex]);
+        while (!userCompleteTurn) {
+            doPlayerMove();
+        }
+        if (userMoveIndex != null) {
             showResultInfo();
         }
     }
 
-    public void doUserMove(){
-        userMoveIndex = UIUtil.getUserChoiceIndex();
-        System.err.println(userMoveIndex);
+    private void doPlayerMove() {
+        printMenu();
+        String userInput = userTurnChecker.readUserInput();
+        Integer indexForCheck = userTurnChecker.getUserChoiceIndex(userInput);
+        if (userInput.equals("0")) {
+            endTheGame();
+        } else if (userTurnChecker.isAvailableIndex(indexForCheck)) {
+            setUserMoveIndex(indexForCheck);
+        }
     }
 
     private void doComputerMove() {
@@ -50,10 +45,19 @@ public class Game {
         System.out.println("HMAC: " + ShaUtil.getEncodedMove(shaKey, moves[computerMoveIndex]).toUpperCase());
     }
 
+    public void printMenu() {
+        System.out.println("Available moves: ");
+        for (int i = 1; i <= moves.length; i++) {
+            System.out.println(i + " - " + moves[i - 1]);
+        }
+        System.out.println("0 - exit");
+        System.out.println("Enter your move: ");
+    }
+
     private void showResultInfo() {
         System.out.println("Computer move: " + moves[computerMoveIndex]);
         checkWinner(userMoveIndex, computerMoveIndex);
-        System.out.println("HMAC key: " + shaKey);
+        System.out.println("HMAC key: " + shaKey.toUpperCase());
     }
 
     private void checkWinner(int playerMoveIndex, int computerMoveIndex) {
@@ -71,7 +75,22 @@ public class Game {
         }
     }
 
-    private void exit() {
+    public void setUserMoveIndex(Integer userMoveIndex) {
+        this.userMoveIndex = userMoveIndex;
+        System.out.println("Your move: " + moves[userMoveIndex]);
+        userCompleteTurn = true;
+    }
+
+    public void endTheGame() {
         System.out.println("Exit...");
+        userCompleteTurn = true;
+    }
+
+    public Integer getUserMoveIndex() {
+        return userMoveIndex;
+    }
+
+    public boolean isUserCompleteTurn() {
+        return userCompleteTurn;
     }
 }
